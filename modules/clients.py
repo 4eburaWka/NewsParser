@@ -7,6 +7,7 @@ from configs import config
 from modules.pusher import Pusher
 from database.database import async_session
 from database.subscriptions import get_all_subscribed_channels
+from utils.posts import preproccess_post
 
 
 class Client:
@@ -27,7 +28,11 @@ class Client:
                 if not current_channel.username or current_channel.username not in subscribed_channels_list:
                     return
 
-                await self.pusher.new_post(current_channel.username, event.message.text)
+                await self.pusher.new_post(
+                    current_channel.username, 
+                    preproccess_post(event.message.text),
+                    f"https://t.me/{current_channel.username}/{event.message.id}"
+                )
             except Exception as e:
                 logging.error(f"Message handler's error: {e}")
 

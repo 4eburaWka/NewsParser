@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import String, Integer, Text
+from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -12,3 +12,4 @@ class UserKeywords(Base):
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     user_id: Mapped[int]
     keywords = mapped_column(Text())
+    normalized_keywords = mapped_column(Text())

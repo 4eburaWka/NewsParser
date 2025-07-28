@@ -9,6 +9,7 @@ from database.database import async_session
 from database.keywords import get_user_keywords
 from database.subscriptions import get_all_subscriptions
 from models.data.Telegram import TelegramMessage
+from utils.posts import normalize_keywords
 
 
 class Pusher:
@@ -23,8 +24,8 @@ class Pusher:
         self.scheduler.add_job(
             self.update_subscriptions_dict, 'interval', seconds=10)
 
-    async def new_post(self, username: str, text: str):
-        text = f"Channel @{username} wrote:\n" + text
+    async def new_post(self, username: str, post_text: str, message_link: str):
+        text = f"Channel @{username} wrote:\n" + post_text + f"\nLink: {message_link}"
         texts = [text[i:i+4096] for i in range(0, len(text), 4096)]
 
         if self.subscriptions_dict.get(username) is None:
@@ -33,8 +34,8 @@ class Pusher:
 
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
-                keywords = await get_user_keywords(sess, user_id)
-            if not any(keyword.lower() in text.lower() for keyword in keywords for text in texts):
+                keywords = (await get_user_keywords(sess, user_id)).normalized_keywords
+            if not any(keyword in text for keyword in keywords for text in normalize_keywords(post_text)):
                 break
             for text in texts:
                 await self.message_queue.put(TelegramMessage(user_id=user_id, text=text))
@@ -63,7 +64,7 @@ class Pusher:
             msg: TelegramMessage = await self.message_queue.get()
 
             try:
-                await self.bot.send_message(msg.user_id, msg.text)
+                await self.bot.send_message(msg.user_id, msg.text, disable_web_page_preview=True)
             except TelegramRetryAfter:
                 await asyncio.sleep(60)
                 continue
