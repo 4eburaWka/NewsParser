@@ -52,4 +52,4 @@ async def set_keywords(message: Message, command: CommandObject):
 @router.message(Command('my_keywords'))
 async def my_keywords(message: Message, command: CommandObject):
     keywords = await get_user_keywords_service(message.from_user.id)
-    await message.reply(USER_KEYWORDS_MSG + ', '.join(keywords))
+    await message.reply(USER_KEYWORDS_MSG + ', '.join(keywords.keywords))
