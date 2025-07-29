@@ -34,7 +34,7 @@ class Pusher:
 
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
-                keywords = (await get_user_keywords(sess, user_id)).normalized_keywords
+                keywords = (await get_user_keywords(sess, user_id)).normalized_keywords.split(',')
             if not any(keyword in text for keyword in keywords for text in normalize_keywords(post_text)):
                 break
             for text in texts:
