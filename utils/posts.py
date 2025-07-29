@@ -32,6 +32,7 @@ def preproccess_post(post: str, remove_punctuation=False) -> str:
         post
         .replace('**', '')
         .replace('--', '')
+        .replace('__', '')
         .replace('||', '')
         .replace('```', '')
         .replace('~~', '')
