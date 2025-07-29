@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import Text
+from sqlalchemy import BigInteger, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 
