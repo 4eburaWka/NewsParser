@@ -7,9 +7,10 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from database.database import async_session
 from database.keywords import get_user_keywords
+from database.keyphrases import get_user_keyphrases
 from database.subscriptions import get_all_subscriptions
 from models.data.Telegram import TelegramMessage
-from utils.posts import normalize_keywords
+from utils.posts import is_subsequence, normalize_keywords
 
 
 class Pusher:
@@ -35,7 +36,14 @@ class Pusher:
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
                 keywords = (await get_user_keywords(sess, user_id)).normalized_keywords.split(',')
-            if not any(keyword in text for keyword in keywords for text in normalize_keywords(post_text)):
+                keyphrases = (await get_user_keyphrases(sess, user_id)).normalized_keyphrases.split(',')
+            
+            normalized_text = normalize_keywords(post_text)
+            if not (
+                any(keyword in text for keyword in keywords for text in normalized_text)
+                or
+                any(is_subsequence(phrase.split(), normalized_text) for phrase in keyphrases)
+            ):
                 break
             for text in texts:
                 await self.message_queue.put(TelegramMessage(user_id=user_id, text=text))
