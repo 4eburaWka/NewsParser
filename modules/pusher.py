@@ -40,7 +40,7 @@ class Pusher:
             
             normalized_text = normalize_keywords(post_text)
             if not (
-                any(keyword in text for keyword in keywords for text in normalized_text)
+                any(keyword == text for keyword in keywords for text in normalized_text)
                 or
                 any(is_subsequence(phrase.split(), normalized_text) for phrase in keyphrases)
             ):
