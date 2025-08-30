@@ -10,7 +10,7 @@ async def get_user_keyphrases(session: AsyncSession, user_id: int) -> UserKeyphr
         .where(UserKeyphrases.user_id == user_id)
     )
     
-    result = (await session.execute(query)).scalars().one()
+    result = (await session.execute(query)).scalars().one_or_none()
     
     return result
 
