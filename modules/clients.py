@@ -25,10 +25,10 @@ class Client:
             try:
                 async with async_session.begin() as sess:
                     subscribed_channels_list = await get_all_subscribed_channels(sess)
-
+                print(4)
                 if not current_channel.username or current_channel.username not in subscribed_channels_list:
                     return
-
+                print(5)
                 await self.pusher.new_post(
                     current_channel.username, 
                     preproccess_post(event.message.text),
