@@ -23,6 +23,7 @@ class Client:
             current_channel = await event.get_chat()
             logging.info(f"Handle message from {current_channel.username}")
             try:
+                print(3)
                 async with async_session.begin() as sess:
                     subscribed_channels_list = await get_all_subscribed_channels(sess)
                 print(4)
