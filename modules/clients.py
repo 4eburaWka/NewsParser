@@ -20,11 +20,12 @@ class Client:
 
         @self.client.on(events.NewMessage)
         async def handler(event):
+            current_channel = await event.get_chat()
+            logging.info(f"Handle message from {current_channel.username}")
             try:
                 async with async_session.begin() as sess:
                     subscribed_channels_list = await get_all_subscribed_channels(sess)
 
-                current_channel = await event.get_chat()
                 if not current_channel.username or current_channel.username not in subscribed_channels_list:
                     return
 
