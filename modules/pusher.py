@@ -62,6 +62,7 @@ class Pusher:
                     subscription.user_id)
 
         self.subscriptions_dict = subscriptions_dict
+        logging.info(subscriptions_dict)
 
     async def start_queue_processing(self):
         self.scheduler.start()
