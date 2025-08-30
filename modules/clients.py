@@ -23,13 +23,13 @@ class Client:
             current_channel = await event.get_chat()
             logging.info(f"Handle message from {current_channel.username}")
             try:
-                print(3)
+                logging.info(3)
                 async with async_session.begin() as sess:
                     subscribed_channels_list = await get_all_subscribed_channels(sess)
-                print(4)
+                logging.info(4)
                 if not current_channel.username or current_channel.username not in subscribed_channels_list:
                     return
-                print(5)
+                logging.info(5)
                 await self.pusher.new_post(
                     current_channel.username, 
                     preproccess_post(event.message.text),
