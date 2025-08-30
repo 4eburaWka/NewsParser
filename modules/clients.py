@@ -23,18 +23,18 @@ class Client:
             current_channel = await event.get_chat()
             logging.info(f"Handle message from {current_channel.username}")
             try:
-                logging.info(3)
                 async with async_session.begin() as sess:
                     subscribed_channels_list = await get_all_subscribed_channels(sess)
-                logging.info(4)
                 if not current_channel.username or current_channel.username not in subscribed_channels_list:
+                    logging.info(5)
                     return
-                logging.info(5)
+                logging.info(6)
                 await self.pusher.new_post(
                     current_channel.username, 
                     preproccess_post(event.message.text),
                     f"https://t.me/{current_channel.username}/{event.message.id}"
                 )
+                logging.info(7)
             except Exception as e:
                 logging.error(f"Message handler's error: {e}")
 
