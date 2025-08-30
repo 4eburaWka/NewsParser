@@ -34,6 +34,7 @@ class Client:
                 )
             except Exception as e:
                 logging.error(f"Message handler's error: {e}")
+                raise e
 
     async def subscribe_to_channel(self, channel: str):
         await self.client(JoinChannelRequest(channel))
