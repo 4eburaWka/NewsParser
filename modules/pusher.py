@@ -43,6 +43,11 @@ class Pusher:
             logging.info(keywords)
             logging.info(keyphrases)
             normalized_text = normalize_keywords(post_text)
+            logging.info(not (
+                (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
+                or
+                (keyphrases and any(is_subsequence(phrase.split(), normalized_text) for phrase in keyphrases))
+            ))
             if not (
                 (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
                 or
