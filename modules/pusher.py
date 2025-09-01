@@ -77,7 +77,8 @@ class Pusher:
 
             try:
                 await self.bot.send_message(msg.user_id, msg.text, disable_web_page_preview=True)
-            except TelegramRetryAfter:
+            except TelegramRetryAfter as e:
+                logging.error(f"Telegram error {e}")
                 await asyncio.sleep(60)
                 continue
             except TelegramBadRequest as e:
