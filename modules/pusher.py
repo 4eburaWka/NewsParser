@@ -33,6 +33,8 @@ class Pusher:
             logging.error("Channel username is not in database")
             return
 
+        normalized_text = normalize_keywords(post_text)
+        logging.info(normalized_text)
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
                 user_keywords = await get_user_keywords(sess, user_id)
@@ -40,13 +42,6 @@ class Pusher:
                 
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
-            normalized_text = normalize_keywords(post_text)
-            logging.info(normalized_text)
-            logging.info(not (
-                (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
-                or
-                (keyphrases and any(is_subsequence(phrase.split(), normalized_text) for phrase in keyphrases))
-            ))
             if not (
                 (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
                 or
@@ -54,6 +49,7 @@ class Pusher:
             ):
                 break
             for text in texts:
+                logging.info(f"put {text}")
                 await self.message_queue.put(TelegramMessage(user_id=user_id, text=text))
 
     async def update_subscriptions_dict(self):
