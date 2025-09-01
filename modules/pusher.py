@@ -38,8 +38,8 @@ class Pusher:
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
                 
-            keywords = user_keywords.normalized_keywords.split(',') if user_keywords is not None else None
-            keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases is not None else None
+            keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
+            keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
             
             normalized_text = normalize_keywords(post_text)
             if not (
