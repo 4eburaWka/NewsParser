@@ -23,7 +23,7 @@ class Pusher:
 
         self.scheduler = AsyncIOScheduler()
         self.scheduler.add_job(
-            self.update_subscriptions_dict, 'interval', seconds=10)
+            self.update_subscriptions_dict, 'interval', seconds=30, first=5)
 
     async def new_post(self, username: str, post_text: str, message_link: str):
         text = f"Channel @{username} wrote:\n" + post_text + f"\nLink: {message_link}"
