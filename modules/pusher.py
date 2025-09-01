@@ -49,7 +49,7 @@ class Pusher:
             ):
                 break
             for text in texts:
-                logging.info(f"put {text}")
+                logging.info(f"to {user_id} put {text}")
                 await self.message_queue.put(TelegramMessage(user_id=user_id, text=text))
 
     async def update_subscriptions_dict(self):
