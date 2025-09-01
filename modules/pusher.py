@@ -40,7 +40,8 @@ class Pusher:
                 
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
-            
+            logging.info(keywords)
+            logging.info(keyphrases)
             normalized_text = normalize_keywords(post_text)
             if not (
                 (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
