@@ -73,7 +73,7 @@ class Pusher:
 
         logging.info("Start pusher")
         
-        while self.message_queue:
+        while self.message_queue_enabled:
             msg: TelegramMessage = await self.message_queue.get()
 
             try:
