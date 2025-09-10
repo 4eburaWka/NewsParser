@@ -84,6 +84,8 @@ class Pusher:
                 continue
             except TelegramBadRequest as e:
                 logging.error(f"Pusher error: {e}")
+            except Exception as e:
+                logging.error(f"Pusher unknown error: {e}")
 
             self.message_queue.task_done()
 
