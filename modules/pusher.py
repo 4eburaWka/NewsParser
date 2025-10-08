@@ -38,9 +38,9 @@ class Pusher:
             async with async_session.begin() as sess:
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
-            logging.info(f"For user {user_id} keywords: {user_keywords}.\n{(keywords and any(keyword == text for keyword in keywords for text in normalized_text))}")    
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
+            logging.info(f"For user {user_id} keywords: {user_keywords}.\n{(keywords and any(keyword == text for keyword in keywords for text in normalized_text))}")    
             if not (
                 (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
                 or
