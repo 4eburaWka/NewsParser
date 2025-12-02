@@ -34,14 +34,13 @@ class Pusher:
             return
 
         normalized_text = normalize_keywords(post_text)
-        logging.info(normalized_text)
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
-                
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
+            logging.info(f"For user {user_id} keywords: {keywords}.\n{(keywords and any(keyword == text for keyword in keywords for text in normalized_text))}")    
             if not (
                 (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
                 or
