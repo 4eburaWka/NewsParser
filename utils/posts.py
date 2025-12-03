@@ -58,10 +58,12 @@ def normalize_keywords(
     ]
 
 
-def normalize_keyphrases(phrases: list[str] | str):
+def normalize_keyphrases(phrases: list[str] | str, exceptions: list[str] = None):
+    if exceptions is None:
+        exceptions = []
     if isinstance(phrases, str):
         phrases = phrases.split(",")
-    return [" ".join(normalize_keywords(phrase.split())) for phrase in phrases]
+    return [" ".join(normalize_keywords(phrase.split(), exceptions)) for phrase in phrases]
 
 
 def is_subsequence(phrase: list[str], text: list[str]) -> bool:
