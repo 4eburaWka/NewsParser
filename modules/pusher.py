@@ -40,7 +40,7 @@ class Pusher:
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
 
-            normalized_text = normalize_keywords(post_text, exceptions.exceptions.split(','))
+            normalized_text = normalize_keywords(post_text, exceptions.exeptions.split(','))
 
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None

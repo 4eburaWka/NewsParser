@@ -26,7 +26,7 @@ async def set_user_exceptions(session: AsyncSession, user_id: int, exceptions: l
     except Exception:
         pass
     
-    user_exceptions = UserException(user_id=user_id, exceptions=','.join(exceptions))
+    user_exceptions = UserException(user_id=user_id, exeptions=','.join(exceptions))
     
     session.add(user_exceptions)
     await session.commit()
