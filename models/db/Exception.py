@@ -7,7 +7,7 @@ from models.db.Base import Base
 
 
 class UserException(Base):
-    __tablename__ = 'user_exception'
+    __tablename__ = 'user_exceptions'
 
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     user_id: Mapped[int] = mapped_column(BigInteger())
