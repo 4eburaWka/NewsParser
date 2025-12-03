@@ -36,7 +36,7 @@ class Pusher:
 
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
-                exceptions = await get_user_exceptions()
+                exceptions = await get_user_exceptions(sess, user_id)
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
 
