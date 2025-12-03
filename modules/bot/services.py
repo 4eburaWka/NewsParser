@@ -23,12 +23,7 @@ async def get_my_subs_service(user_id: int):
 
 async def set_keywords_service(user_id: int, keywords: list[str]):
     async with async_session.begin() as sess:
-        user_exceptions = await get_user_exceptions(sess, user_id)
-        if user_exceptions:
-            exceptions = user_exceptions.exeptions.split(',')
-        else:
-            exceptions = []
-        return await set_user_keywords(sess, user_id, keywords, normalize_keywords(keywords, exceptions))
+        return await set_user_keywords(sess, user_id, keywords, normalize_keywords(keywords))
 
 
 async def get_user_keywords_service(user_id: int):
@@ -38,12 +33,7 @@ async def get_user_keywords_service(user_id: int):
 
 async def set_keyphrases_service(user_id: int, keyphrases: list[str]):
     async with async_session.begin() as sess:
-        user_exceptions = await get_user_exceptions(sess, user_id)
-        if user_exceptions:
-            exceptions = user_exceptions.exeptions.split(',')
-        else:
-            exceptions = []
-        return await set_user_keyphrases(sess, user_id, keyphrases, normalize_keyphrases(keyphrases, exceptions))
+        return await set_user_keyphrases(sess, user_id, keyphrases, normalize_keyphrases(keyphrases))
 
 
 async def get_user_keyphrases_service(user_id: int):

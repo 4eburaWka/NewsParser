@@ -34,6 +34,7 @@ def preproccess_post(post: str, remove_punctuation=False) -> str:
         .replace("||", "")
         .replace("```", "")
         .replace("~~", "")
+        .lower()
     )
 
 
@@ -41,7 +42,7 @@ morph = pymorphy3.MorphAnalyzer()
 
 
 def normalize_keywords(
-    text: list[str] | str, exceptions: list[str] = None
+    text: list[str] | str
 ) -> list[str]:
     if exceptions is None:
         exceptions = []
@@ -51,19 +52,15 @@ def normalize_keywords(
     return [
         (
             morph.parse(keyword.lower())[0].normal_form
-            if keyword.lower() not in exceptions
-            else keyword
         )
         for keyword in text
     ]
 
 
-def normalize_keyphrases(phrases: list[str] | str, exceptions: list[str] = None):
-    if exceptions is None:
-        exceptions = []
+def normalize_keyphrases(phrases: list[str] | str):
     if isinstance(phrases, str):
         phrases = phrases.split(",")
-    return [" ".join(normalize_keywords(phrase.split(), exceptions)) for phrase in phrases]
+    return [" ".join(normalize_keywords(phrase.split())) for phrase in phrases]
 
 
 def is_subsequence(phrase: list[str], text: list[str]) -> bool:

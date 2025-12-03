@@ -11,7 +11,7 @@ from database.keyphrases import get_user_keyphrases
 from database.subscriptions import get_all_subscriptions
 from database.exceptions import get_user_exceptions
 from models.data.Telegram import TelegramMessage
-from utils.posts import is_subsequence, normalize_keywords
+from utils.posts import is_subsequence, normalize_keywords, preproccess_post
 
 
 class Pusher:
@@ -34,13 +34,14 @@ class Pusher:
         text = f"Channel @{username} wrote:\n" + post_text + f"\nLink: {message_link}"
         texts = [text[i:i+4096] for i in range(0, len(text), 4096)]
 
+        normalized_text = normalize_keywords(post_text)
+        splited_text = preproccess_post(text, True).split()
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
                 exceptions = await get_user_exceptions(sess, user_id)
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
 
-            normalized_text = normalize_keywords(post_text, exceptions.exeptions.split(',') if exceptions is not None else [])
 
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
@@ -49,6 +50,8 @@ class Pusher:
                 (keywords and any(keyword == text for keyword in keywords for text in normalized_text))
                 or
                 (keyphrases and any(is_subsequence(phrase.split(), normalized_text) for phrase in keyphrases))
+                or
+                (exceptions and any(exception == text for exception in exceptions for text in splited_text))
             ):
                 break
             for text in texts:
