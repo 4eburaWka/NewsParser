@@ -84,5 +84,5 @@ async def set_exceptions(message: Message, command: CommandObject):
 
 @router.message(Command('my_exceptions'))
 async def my_exceptions(message: Message, command: CommandObject):
-    keyphrases = await get_user_exceptions_service(message.from_user.id)
-    await message.reply(USER_EXCEPTIONS_MSG + '\n'.join(keyphrases.keyphrases.split(',')))
+    exceptions = await get_user_exceptions_service(message.from_user.id)
+    await message.reply(USER_EXCEPTIONS_MSG + '\n'.join(exceptions.exeptions.split(',')))
