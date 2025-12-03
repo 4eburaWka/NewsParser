@@ -53,7 +53,7 @@ async def set_keywords(message: Message, command: CommandObject):
 @router.message(Command('my_keywords'))
 async def my_keywords(message: Message, command: CommandObject):
     keywords = await get_user_keywords_service(message.from_user.id)
-    await message.reply(USER_KEYWORDS_MSG + ', '.join(keywords.keywords.split(',')))
+    await message.reply(USER_KEYWORDS_MSG + ', '.join(keywords.keywords.split(',') if keywords else []))
 
 
 @router.message(Command('set_keyphrases'))
@@ -69,7 +69,7 @@ async def set_keyphrases(message: Message, command: CommandObject):
 @router.message(Command('my_keyphrases'))
 async def my_keyphrases(message: Message, command: CommandObject):
     keyphrases = await get_user_keyphrases_service(message.from_user.id)
-    await message.reply(USER_KEYWORDS_MSG + '\n'.join(keyphrases.keyphrases.split(',')))
+    await message.reply(USER_KEYWORDS_MSG + '\n'.join(keyphrases.keyphrases.split(',') if keyphrases else []))
 
 
 @router.message(Command('set_exceptions'))
@@ -85,4 +85,4 @@ async def set_exceptions(message: Message, command: CommandObject):
 @router.message(Command('my_exceptions'))
 async def my_exceptions(message: Message, command: CommandObject):
     exceptions = await get_user_exceptions_service(message.from_user.id)
-    await message.reply(USER_EXCEPTIONS_MSG + '\n'.join(exceptions.exeptions.split(',')))
+    await message.reply(USER_EXCEPTIONS_MSG + '\n'.join(exceptions.exeptions.split(',') if exceptions else []))
