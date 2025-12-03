@@ -36,11 +36,11 @@ class Pusher:
 
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
-                exceptions = (await get_user_exceptions(sess, user_id)) or ""
+                exceptions = await get_user_exceptions(sess, user_id)
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
 
-            normalized_text = normalize_keywords(post_text, exceptions.exeptions.split(','))
+            normalized_text = normalize_keywords(post_text, exceptions.exeptions.split(',') if exceptions is not None else [])
 
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
