@@ -11,4 +11,4 @@ class UserException(Base):
 
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     user_id: Mapped[int] = mapped_column(BigInteger())
-    exceptions = mapped_column(Text())
+    exeptions = mapped_column(Text())
