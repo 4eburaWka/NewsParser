@@ -9,6 +9,7 @@ from database.database import async_session
 from database.keywords import get_user_keywords
 from database.keyphrases import get_user_keyphrases
 from database.subscriptions import get_all_subscriptions
+from database.exceptions import get_user_exceptions
 from models.data.Telegram import TelegramMessage
 from utils.posts import is_subsequence, normalize_keywords
 
@@ -26,18 +27,21 @@ class Pusher:
             self.update_subscriptions_dict, 'interval', seconds=30)
 
     async def new_post(self, username: str, post_text: str, message_link: str):
-        text = f"Channel @{username} wrote:\n" + post_text + f"\nLink: {message_link}"
-        texts = [text[i:i+4096] for i in range(0, len(text), 4096)]
-
         if self.subscriptions_dict.get(username) is None:
             logging.error("Channel username is not in database")
             return
+        
+        text = f"Channel @{username} wrote:\n" + post_text + f"\nLink: {message_link}"
+        texts = [text[i:i+4096] for i in range(0, len(text), 4096)]
 
-        normalized_text = normalize_keywords(post_text)
         for user_id in self.subscriptions_dict.get(username):
             async with async_session.begin() as sess:
+                exceptions = await get_user_exceptions()
                 user_keywords = await get_user_keywords(sess, user_id)
                 user_keyphrases = await get_user_keyphrases(sess, user_id)
+
+            normalized_text = normalize_keywords(post_text, exceptions.exceptions.split(','))
+
             keywords = user_keywords.normalized_keywords.split(',') if user_keywords and user_keywords.normalized_keywords else None
             keyphrases = user_keyphrases.normalized_keyphrases.split(',') if user_keyphrases and user_keyphrases.normalized_keyphrases else None
             logging.info(f"For user {user_id} keywords: {keywords}.\n{(keywords and any(keyword == text for keyword in keywords for text in normalized_text))}")    

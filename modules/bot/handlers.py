@@ -4,7 +4,7 @@ from aiogram.types import Message
 
 from modules.bot.exceptions import IncorrectArgsError
 from modules.bot.message_text import *
-from modules.bot.services import get_my_subs_service, get_user_keywords_service, set_keywords_service, subscribe_service, unsubscribe_service, set_keyphrases_service, get_user_keyphrases_service
+from modules.bot.services import get_my_subs_service, get_user_exceptions_service, get_user_keywords_service, set_exceptions_service, set_keywords_service, subscribe_service, unsubscribe_service, set_keyphrases_service, get_user_keyphrases_service
 from modules.bot.utils import parse_args
 
 
@@ -70,3 +70,19 @@ async def set_keyphrases(message: Message, command: CommandObject):
 async def my_keyphrases(message: Message, command: CommandObject):
     keyphrases = await get_user_keyphrases_service(message.from_user.id)
     await message.reply(USER_KEYWORDS_MSG + '\n'.join(keyphrases.keyphrases.split(',')))
+
+
+@router.message(Command('set_exceptions'))
+async def set_exceptions(message: Message, command: CommandObject):
+    args = command.args.lower().split(',')
+    if not args:
+        raise IncorrectArgsError(command.text)
+
+    await set_exceptions_service(message.from_user.id, args)
+    await message.reply(KEYWORDS_SETTING_SUCCESS)
+
+
+@router.message(Command('my_exceptions'))
+async def my_exceptions(message: Message, command: CommandObject):
+    keyphrases = await get_user_exceptions_service(message.from_user.id)
+    await message.reply(USER_EXCEPTIONS_MSG + '\n'.join(keyphrases.keyphrases.split(',')))
