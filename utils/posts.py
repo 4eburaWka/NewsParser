@@ -44,9 +44,6 @@ morph = pymorphy3.MorphAnalyzer()
 def normalize_keywords(
     text: list[str] | str
 ) -> list[str]:
-    if exceptions is None:
-        exceptions = []
-
     if isinstance(text, str):
         text = preproccess_post(text, True).split()
     return [
